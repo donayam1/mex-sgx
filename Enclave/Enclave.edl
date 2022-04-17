@@ -36,7 +36,7 @@ enclave {
     from "sgx_tswitchless.edl" import *;
 
     trusted {
-        public int ecall_matchOligo([in, string]char* oligo,size_t size);
+        public int ecall_matchOligo([in, size=size]uint8_t* oligo,size_t size);
         // public void find_seed_matches([in,string]char *string);
         // public int oligo_to_binary([in,string]char *string);  
         // public void reverse([in,string]char* string,[out,size=length] char*new_string, size_t length);

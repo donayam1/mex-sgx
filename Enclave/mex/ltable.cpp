@@ -3,6 +3,7 @@
 #include "../Enclave_t.h"
 #include "ltable.h"
 #include <string.h>
+#include "../Aes/aes.hpp"
 // #include "input.h"
 
 // #include "server.h"
@@ -126,21 +127,42 @@
 
 
 
-
-int ecall_matchOligo(char *oligo,size_t size)
+char buf[17];
+int ecall_matchOligo(uint8_t *oligo,size_t size)
 {
   
-  query_full_len = strlen(oligo);
-  ocall_print_string(oligo,query_full_len);
-  // char *nl="\n";
-  // ocall_print_string(nl,strlen(nl));
-  // justCall(oligo);
+  struct AES_ctx ctx;
+  AES_init_ctx(&ctx, key);
 
-  find_seed_matches(oligo);
+  char *temp = (char*)oligo;
+
+  strncpy(buf,temp,size);
+  
+
+  
+
+  uint8_t *buffi = (uint8_t*)buf;
+  AES_ECB_decrypt(&ctx,buffi);
+  char *inc = buf;
+  ocall_print_string(inc,strlen(inc));
+
+  // char *e = strchr(inc, '0');
+  // if(e ==NULL)
+  //   e = inc;
+
+  // int index = (int)(e - inc);
+  // inc[index]='\0';
+
+  // ocall_print_string(inc,strlen(inc));
+
+
+
+  query_full_len = strlen(inc);
+  find_seed_matches(inc);
   sense_change = match_count;
   //cout << "Executing find_matches reverse." << endl;
   char reversed_string[MAX_CHAR];
-  reverse(oligo,reversed_string,MAX_CHAR);
+  reverse(inc,reversed_string,MAX_CHAR);
   query_full_len = strlen(reversed_string);
   find_seed_matches(reversed_string);
   int j;

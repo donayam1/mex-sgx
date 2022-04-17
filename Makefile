@@ -193,6 +193,12 @@ ifneq ($(Build_Mode), HW_RELEASE)
 	@echo "RUN  =>  $(App_Name) [$(SGX_MODE)|$(SGX_ARCH), OK]"
 endif
 
+
+Aes/aes.c: Aes/aes.h
+Aes/aes.o: Aes/aes.c 
+	@$(CC) $(Enclave_C_Flags) -c $< -o $@
+	@echo "CC   <=  $<"
+
 ######## App Objects ########
 
 App/Enclave_u.h: $(SGX_EDGER8R) Enclave/Enclave.edl
@@ -210,7 +216,7 @@ App/%.o: App/%.cpp App/Enclave_u.h
 	@$(CXX) $(App_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(App_Name): App/Enclave_u.o $(App_Cpp_Objects)
+$(App_Name): App/Enclave_u.o $(App_Cpp_Objects) Aes/aes.o
 	@$(CXX) $^ -o $@ $(App_Link_Flags) -fopenmp -lz -ldl
 	@echo "LINK =>  $@"
 
@@ -232,7 +238,7 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CXX) $(Enclave_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(Enclave_Name): Enclave/Enclave_t.o $(Enclave_Cpp_Objects)
+$(Enclave_Name): Enclave/Enclave_t.o $(Enclave_Cpp_Objects) Aes/aes.o
 	@$(CXX) $^ -o $@ $(Enclave_Link_Flags) -fopenmp -lz -ldl
 	@echo "LINK =>  $@"
 

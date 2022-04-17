@@ -56,7 +56,7 @@
 #include <omp.h>
 #include <fstream>
 #include "utils.h"
-
+#include "../Aes/aes.hpp"
 
 // #define VTUNE_ANALYSIS 1
 
@@ -248,6 +248,14 @@ void ocall_print_string(const char *str,size_t length)
 /* Application entry */
 
 
+/*
+uint8_t data[]={0x0,0x46,0xb5,0x28,0x58,0x3c,0x91,0x4b,0xd2,0x5c,0x25,0x80,0x30,0xce,0xd3,0x8f,'\0'};
+ATTCGATTCCAGCGTA
+
+
+
+*/
+
 int SGX_CDECL main(int argc, char *argv[])
 {
     (void) argc;
@@ -265,11 +273,30 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1;
     }
 
+    // char data[32] = "ACTGACTGACTGACT";
+    // int length = strlen(data);
+    // printf("Length = %d \n",length);
+    // while(length <=30){
+    //     strncat(data,"0",1);
+    //     length = strlen(data);
+    //     printf("Length %d= %s \n",length,data);
+       
+    // }
+
+    // struct AES_ctx ctx;
+    // AES_init_ctx(&ctx, key);
+
+    uint8_t data[]={0xa0,0x26,0xc0,0x5f,0x26,0x84,0x5c,0x56,0xce,0x20,0x2,0xe8,0x36,0xe8,0x40,0x1f,'\0'};
     
-    size_t size = strlen(argv[1]);
-    char *input = argv[1];
+    // AES_ECB_decrypt(&ctx, data);
+    // char *datac = (char*)data;
+    // printf ("App decrypted = %s",datac);
+
+    const char *input = (char*)data;//argv[1]; 
+    size_t size = 17;//strlen(input);//argv[1]
+    printf("size=%d\n",size);
     int matchCount;
-    sgx_status_t status1 = ecall_matchOligo(global_eid,&matchCount,input,size);
+    sgx_status_t status1 = ecall_matchOligo(global_eid,&matchCount,data,size);
     if (status1 != SGX_SUCCESS) {
         printf("ERROR: ECall failed\n");
         print_error_message(status1);
