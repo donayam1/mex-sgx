@@ -1,0 +1,4 @@
+#!/bin/bash
+# The interpreter used to execute the script
+
+time ./app -pairs /home/mallik/eecs570/input-datasets/bsw/small/bandedSWA_SRR7733443_100k_input.txt > output.txt
