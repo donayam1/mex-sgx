@@ -1,2 +1,6 @@
 enclave.signed.so 
 enclave.so 
+app
+*_t*
+*_u*
+*.o
